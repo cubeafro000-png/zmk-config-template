@@ -1,0 +1,47 @@
+/ {
+    chosen {
+        zmk,kscan = &kscan0;
+        zmk,matrix-transform = &default_transform;
+    };
+
+    /* 物理的なキー配置 (5行×6列) と スキャン位置 RC(行, 列) のマッピング */
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        columns = <6>; /* 物理的な列数：6列 */
+        rows = <5>;    /* 物理的な行数：5行 */
+
+        bindings = <
+            /* 1段目 (SW1〜SW6)   : 左3キー(Row0) / 右3キー(Row1) */
+            RC(0,0) RC(0,1) RC(0,2)   RC(1,0) RC(1,1) RC(1,2)
+
+            /* 2段目 (SW7〜SW12)  : 左3キー(Row2) / 右3キー(Row3) */
+            RC(2,0) RC(2,1) RC(2,2)   RC(3,0) RC(3,1) RC(3,2)
+
+            /* 3段目 (SW13〜SW18) : 左3キー(Row4) / 右3キー(Row5) */
+            RC(4,0) RC(4,1) RC(4,2)   RC(5,0) RC(5,1) RC(5,2)
+
+            /* 4段目 (SW19〜SW24) : 左3キー(Row6) / 右3キー(Row7) */
+            RC(6,0) RC(6,1) RC(6,2)   RC(7,0) RC(7,1) RC(7,2)
+
+            /* 5段目 (SW25〜SW30) : 左3キー(Row8) / 右3キー(Row9) */
+            RC(8,0) RC(8,1) RC(8,2)   RC(9,0) RC(9,1) RC(9,2)
+        >;
+    };
+
+    kscan0: kscan {
+        compatible = "zmk,kscan-gpio-matrix";
+        diode-direction = "col2row";
+
+        /* 行 (Row 0 〜 Row 4) のピン割り当て */
+        row-gpios = <&xiao_d 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,  /* D0 */
+                    <&xiao_d 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,  /* D1 */
+                    <&xiao_d 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,  /* D2 */
+                    <&xiao_d 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,  /* D3 */
+                    <&xiao_d 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>; /* D10 */
+
+        /* 列 (Col 0 〜 Col 2) のピン割り当て */
+        col-gpios = <&xiao_d 9 GPIO_ACTIVE_HIGH>,  /* D9 */
+                    <&xiao_d 7 GPIO_ACTIVE_HIGH>,  /* D7 */
+                    <&xiao_d 6 GPIO_ACTIVE_HIGH>;  /* D6 */
+    };
+};
