@@ -11,8 +11,8 @@
         columns = <6>;
         rows = <5>;
 
-        /* 30キー全個所に重複のない一意のアドレス(RC)を割り当て */
-        bindings = <
+        /* 最新のZMK仕様に合わせて 'bindings' を 'map' に変更 */
+        map = <
             RC(0,0) RC(0,1) RC(0,2)   RC(5,0) RC(5,1) RC(5,2)
             RC(1,0) RC(1,1) RC(1,2)   RC(6,0) RC(6,1) RC(6,2)
             RC(2,0) RC(2,1) RC(2,2)   RC(7,0) RC(7,1) RC(7,2)
@@ -25,7 +25,6 @@
         compatible = "zmk,kscan-gpio-matrix";
         diode-direction = "col2row";
 
-        /* 5本の行ピンを2周期分（10行＝30アドレス分）として定義 */
         row-gpios = <&xiao_d 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
                     <&xiao_d 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
                     <&xiao_d 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
