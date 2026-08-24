@@ -8,15 +8,15 @@
         default_layer {
             bindings = <
                 /* 1段目 (SW1〜SW6) */
-                &kp Q    &kp W    &kp E    &kp R    &kp T    &kp Y
+                &kp ESC    &kp 1    &kp 2    &kp 3    &kp 4    &kp 5
                 /* 2段目 (SW7〜SW12) */
-                &kp A    &kp S    &kp D    &kp F    &kp G    &kp H
+                &kp TAB    &kp Q    &kp W    &kp E    &kp R    &kp T
                 /* 3段目 (SW13〜SW18) */
-                &kp Z    &kp X    &kp C    &kp V    &kp B    &kp N
+                &kp CAPS   &kp A    &kp S    &kp D    &kp F    &kp G
                 /* 4段目 (SW19〜SW24) */
-                &kp LSHFT &kp LALT &kp LCTRL &kp SPACE &kp ENTER &kp BSPC
+                &kp LSHFT  &kp Z    &kp X    &kp C    &kp V    &kp B
                 /* 5段目 (SW25〜SW30) */
-                &kp 1    &kp 2    &kp 3    &kp 4    &kp 5    &kp 6
+                &kp LCTRL  &kp LGUI &kp LGUI &kp LALT &kp SPACE &kp SPACE
             >;
         };
     };
