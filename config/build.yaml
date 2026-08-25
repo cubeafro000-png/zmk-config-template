@@ -1,3 +1,0 @@
-include:
-  - board: seeed_xiao_nrf52840
-    shield: my_keyboard
