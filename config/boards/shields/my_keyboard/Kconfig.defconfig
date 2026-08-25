@@ -6,4 +6,7 @@ config ZMK_KEYBOARD_NAME
 config ZMK_BOARD_COMPAT
     def_bool y
 
+config ZMK_KSCAN_COMPOSITE
+    def_bool y
+
 endif
