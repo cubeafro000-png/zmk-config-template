@@ -25,7 +25,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
     const struct device *dev = data->dev;
     const struct kscan_duplex_config *cfg = dev->config;
 
-    /* 全ピンを一旦Hi-Z（入力・プル抵抗なし）に設定 */
+    /* 全ピンをHi-Z（入力・プル抵抗なし）にリセット */
     for (size_t r = 0; r < cfg->num_rows; r++) {
         gpio_pin_configure_dt(&cfg->rows[r], GPIO_INPUT);
     }
@@ -39,9 +39,8 @@ static void kscan_duplex_work_handler(struct k_work *work) {
     }
 
     for (size_t c = 0; c < cfg->num_cols; c++) {
-        gpio_pin_configure_dt(&cfg->cols[c], GPIO_OUTPUT_INACTIVE);
-        gpio_pin_set_dt(&cfg->cols[c], 1);
-        k_busy_wait(30);
+        gpio_pin_configure_dt(&cfg->cols[c], GPIO_OUTPUT_HIGH);
+        k_busy_wait(50);
 
         for (size_t r = 0; r < cfg->num_rows; r++) {
             bool pressed = (gpio_pin_get_dt(&cfg->rows[r]) > 0);
@@ -54,11 +53,9 @@ static void kscan_duplex_work_handler(struct k_work *work) {
                 }
             }
         }
-        gpio_pin_set_dt(&cfg->cols[c], 0);
         gpio_pin_configure_dt(&cfg->cols[c], GPIO_INPUT);
     }
 
-    /* 行ピンをHi-Zにリセット */
     for (size_t r = 0; r < cfg->num_rows; r++) {
         gpio_pin_configure_dt(&cfg->rows[r], GPIO_INPUT);
     }
@@ -69,9 +66,8 @@ static void kscan_duplex_work_handler(struct k_work *work) {
     }
 
     for (size_t r = 0; r < cfg->num_rows; r++) {
-        gpio_pin_configure_dt(&cfg->rows[r], GPIO_OUTPUT_INACTIVE);
-        gpio_pin_set_dt(&cfg->rows[r], 1);
-        k_busy_wait(30);
+        gpio_pin_configure_dt(&cfg->rows[r], GPIO_OUTPUT_HIGH);
+        k_busy_wait(50);
 
         for (size_t c = 0; c < cfg->num_cols; c++) {
             bool pressed = (gpio_pin_get_dt(&cfg->cols[c]) > 0);
@@ -84,11 +80,9 @@ static void kscan_duplex_work_handler(struct k_work *work) {
                 }
             }
         }
-        gpio_pin_set_dt(&cfg->rows[r], 0);
         gpio_pin_configure_dt(&cfg->rows[r], GPIO_INPUT);
     }
 
-    /* 列ピンをHi-Zにリセット */
     for (size_t c = 0; c < cfg->num_cols; c++) {
         gpio_pin_configure_dt(&cfg->cols[c], GPIO_INPUT);
     }
