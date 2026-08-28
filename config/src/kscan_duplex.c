@@ -98,12 +98,16 @@ static const struct kscan_driver_api kscan_duplex_api = {
     .disable_callback = kscan_duplex_disable,
 };
 
+/* カンマ区切りのための補助マクロ */
+#define GPIO_SPEC_GET_ELEM(node_id, prop, idx) \
+    GPIO_DT_SPEC_GET_BY_IDX(node_id, prop, idx),
+
 #define KSCAN_DUPLEX_INIT(n) \
     static struct gpio_dt_spec rows_##n[] = { \
-        DT_INST_FOREACH_PROP_ELEM(n, row_gpios, GPIO_DT_SPEC_GET_BY_IDX) \
+        DT_INST_FOREACH_PROP_ELEM(n, row_gpios, GPIO_SPEC_GET_ELEM) \
     }; \
     static struct gpio_dt_spec cols_##n[] = { \
-        DT_INST_FOREACH_PROP_ELEM(n, col_gpios, GPIO_DT_SPEC_GET_BY_IDX) \
+        DT_INST_FOREACH_PROP_ELEM(n, col_gpios, GPIO_SPEC_GET_ELEM) \
     }; \
     static const struct kscan_duplex_config config_##n = { \
         .rows = rows_##n, \
