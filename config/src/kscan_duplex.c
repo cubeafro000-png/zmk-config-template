@@ -16,7 +16,7 @@ struct kscan_duplex_data {
     kscan_callback_t callback;
     const struct device *dev;
     struct k_work_delayable work;
-    bool matrix_state[5][6]; /* 5行 × 6列の前回状態を保持 */
+    bool matrix_state[5][6];
 };
 
 static void kscan_duplex_work_handler(struct k_work *work) {
@@ -25,7 +25,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
     const struct device *dev = data->dev;
     const struct kscan_duplex_config *cfg = dev->config;
 
-    /* 全ピンをハイインピーダンス（入力・プルなし）に初期化 */
+    /* 全ピンをハイインピーダンス（入力・プル抵抗なし）にリセット */
     for (size_t r = 0; r < cfg->num_rows; r++) {
         gpio_pin_configure_dt(&cfg->rows[r], GPIO_INPUT);
     }
@@ -40,7 +40,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
 
     for (size_t c = 0; c < cfg->num_cols; c++) {
         gpio_pin_configure_dt(&cfg->cols[c], GPIO_OUTPUT_ACTIVE);
-        k_busy_wait(20);
+        k_busy_wait(50);
 
         for (size_t r = 0; r < cfg->num_rows; r++) {
             bool pressed = (gpio_pin_get_dt(&cfg->rows[r]) > 0);
@@ -56,6 +56,11 @@ static void kscan_duplex_work_handler(struct k_work *work) {
         gpio_pin_configure_dt(&cfg->cols[c], GPIO_INPUT);
     }
 
+    /* 行ピンをHi-Zに復元 */
+    for (size_t r = 0; r < cfg->num_rows; r++) {
+        gpio_pin_configure_dt(&cfg->rows[r], GPIO_INPUT);
+    }
+
     /* --- フェーズ2: 後半15キー (Row -> Col) --- */
     for (size_t c = 0; c < cfg->num_cols; c++) {
         gpio_pin_configure_dt(&cfg->cols[c], GPIO_INPUT | GPIO_PULL_DOWN);
@@ -63,7 +68,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
 
     for (size_t r = 0; r < cfg->num_rows; r++) {
         gpio_pin_configure_dt(&cfg->rows[r], GPIO_OUTPUT_ACTIVE);
-        k_busy_wait(20);
+        k_busy_wait(50);
 
         for (size_t c = 0; c < cfg->num_cols; c++) {
             bool pressed = (gpio_pin_get_dt(&cfg->cols[c]) > 0);
@@ -77,6 +82,11 @@ static void kscan_duplex_work_handler(struct k_work *work) {
             }
         }
         gpio_pin_configure_dt(&cfg->rows[r], GPIO_INPUT);
+    }
+
+    /* 列ピンをHi-Zに復元 */
+    for (size_t c = 0; c < cfg->num_cols; c++) {
+        gpio_pin_configure_dt(&cfg->cols[c], GPIO_INPUT);
     }
 
     k_work_schedule(&data->work, K_MSEC(10));
