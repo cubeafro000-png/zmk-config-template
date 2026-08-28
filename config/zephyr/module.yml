@@ -1,0 +1,3 @@
+name: my_keyboard_custom
+build:
+  cmake: .
