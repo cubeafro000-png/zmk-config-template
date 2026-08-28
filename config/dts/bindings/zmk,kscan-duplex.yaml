@@ -1,0 +1,11 @@
+description: Duplex Matrix Kscan Driver
+compatible: "zmk,kscan-duplex"
+include: kscan-controller.yaml
+
+properties:
+  row-gpios:
+    type: phandle-array
+    required: true
+  col-gpios:
+    type: phandle-array
+    required: true
