@@ -1,6 +1,6 @@
 description: Duplex Matrix Kscan Driver
 compatible: "zmk,kscan-duplex"
-include: kscan-controller.yaml
+include: base.yaml
 
 properties:
   row-gpios:
