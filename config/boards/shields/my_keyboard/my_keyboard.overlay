@@ -1,6 +1,5 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 
-/* D7/D6ピンのUART機能を解除 */
 &uart0 {
     status = "disabled";
 };
@@ -28,14 +27,12 @@
     kscan0: kscan {
         compatible = "zmk,kscan-duplex";
 
-        /* row0:D0, row1:D1, row2:D2, row3:D3, row4:D6 */
         row-gpios = <&xiao_d 0 GPIO_ACTIVE_HIGH>,
                     <&xiao_d 1 GPIO_ACTIVE_HIGH>,
                     <&xiao_d 2 GPIO_ACTIVE_HIGH>,
                     <&xiao_d 3 GPIO_ACTIVE_HIGH>,
                     <&xiao_d 6 GPIO_ACTIVE_HIGH>;
 
-        /* col0:D10, col1:D9, col2:D7 */
         col-gpios = <&xiao_d 10 GPIO_ACTIVE_HIGH>,
                     <&xiao_d 9 GPIO_ACTIVE_HIGH>,
                     <&xiao_d 7 GPIO_ACTIVE_HIGH>;
