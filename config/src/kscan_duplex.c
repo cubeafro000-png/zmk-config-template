@@ -16,6 +16,7 @@ struct kscan_duplex_data {
     kscan_callback_t callback;
     const struct device *dev;
     struct k_work_delayable work;
+    bool matrix_state[5][6]; /* 5行 × 6列の前回状態を保持 */
 };
 
 static void kscan_duplex_work_handler(struct k_work *work) {
@@ -24,44 +25,58 @@ static void kscan_duplex_work_handler(struct k_work *work) {
     const struct device *dev = data->dev;
     const struct kscan_duplex_config *cfg = dev->config;
 
-    /* フェーズ1: 前半15キー (Col -> Row) */
-    for (size_t c = 0; c < cfg->num_cols; c++) {
-        gpio_pin_configure_dt(&cfg->cols[c], GPIO_OUTPUT_INACTIVE);
+    /* 全ピンをハイインピーダンス（入力・プルなし）に初期化 */
+    for (size_t r = 0; r < cfg->num_rows; r++) {
+        gpio_pin_configure_dt(&cfg->rows[r], GPIO_INPUT);
     }
+    for (size_t c = 0; c < cfg->num_cols; c++) {
+        gpio_pin_configure_dt(&cfg->cols[c], GPIO_INPUT);
+    }
+
+    /* --- フェーズ1: 前半15キー (Col -> Row) --- */
     for (size_t r = 0; r < cfg->num_rows; r++) {
         gpio_pin_configure_dt(&cfg->rows[r], GPIO_INPUT | GPIO_PULL_DOWN);
     }
 
     for (size_t c = 0; c < cfg->num_cols; c++) {
-        gpio_pin_set_dt(&cfg->cols[c], 1);
-        k_busy_wait(10);
+        gpio_pin_configure_dt(&cfg->cols[c], GPIO_OUTPUT_ACTIVE);
+        k_busy_wait(20);
+
         for (size_t r = 0; r < cfg->num_rows; r++) {
-            int val = gpio_pin_get_dt(&cfg->rows[r]);
-            if (data->callback) {
-                data->callback(dev, r, c, val > 0);
+            bool pressed = (gpio_pin_get_dt(&cfg->rows[r]) > 0);
+            size_t col_idx = c;
+
+            if (data->matrix_state[r][col_idx] != pressed) {
+                data->matrix_state[r][col_idx] = pressed;
+                if (data->callback) {
+                    data->callback(dev, r, col_idx, pressed);
+                }
             }
         }
-        gpio_pin_set_dt(&cfg->cols[c], 0);
+        gpio_pin_configure_dt(&cfg->cols[c], GPIO_INPUT);
     }
 
-    /* フェーズ2: 後半15キー (Row -> Col) */
-    for (size_t r = 0; r < cfg->num_rows; r++) {
-        gpio_pin_configure_dt(&cfg->rows[r], GPIO_OUTPUT_INACTIVE);
-    }
+    /* --- フェーズ2: 後半15キー (Row -> Col) --- */
     for (size_t c = 0; c < cfg->num_cols; c++) {
         gpio_pin_configure_dt(&cfg->cols[c], GPIO_INPUT | GPIO_PULL_DOWN);
     }
 
     for (size_t r = 0; r < cfg->num_rows; r++) {
-        gpio_pin_set_dt(&cfg->rows[r], 1);
-        k_busy_wait(10);
+        gpio_pin_configure_dt(&cfg->rows[r], GPIO_OUTPUT_ACTIVE);
+        k_busy_wait(20);
+
         for (size_t c = 0; c < cfg->num_cols; c++) {
-            int val = gpio_pin_get_dt(&cfg->cols[c]);
-            if (data->callback) {
-                data->callback(dev, r, c + cfg->num_cols, val > 0);
+            bool pressed = (gpio_pin_get_dt(&cfg->cols[c]) > 0);
+            size_t col_idx = c + cfg->num_cols;
+
+            if (data->matrix_state[r][col_idx] != pressed) {
+                data->matrix_state[r][col_idx] = pressed;
+                if (data->callback) {
+                    data->callback(dev, r, col_idx, pressed);
+                }
             }
         }
-        gpio_pin_set_dt(&cfg->rows[r], 0);
+        gpio_pin_configure_dt(&cfg->rows[r], GPIO_INPUT);
     }
 
     k_work_schedule(&data->work, K_MSEC(10));
@@ -88,6 +103,11 @@ static int kscan_duplex_disable(const struct device *dev) {
 static int kscan_duplex_init(const struct device *dev) {
     struct kscan_duplex_data *data = dev->data;
     data->dev = dev;
+    for (int r = 0; r < 5; r++) {
+        for (int c = 0; c < 6; c++) {
+            data->matrix_state[r][c] = false;
+        }
+    }
     k_work_init_delayable(&data->work, kscan_duplex_work_handler);
     return 0;
 }
@@ -98,7 +118,6 @@ static const struct kscan_driver_api kscan_duplex_api = {
     .disable_callback = kscan_duplex_disable,
 };
 
-/* カンマ区切りのための補助マクロ */
 #define GPIO_SPEC_GET_ELEM(node_id, prop, idx) \
     GPIO_DT_SPEC_GET_BY_IDX(node_id, prop, idx),
 
