@@ -10,7 +10,7 @@
                 &kp ESC    &kp N1  &kp N2  &kp N3  &kp N4  &kp N5
                 &kp TAB    &kp Q   &kp W   &kp E   &kp R   &kp T
                 &kp CAPS   &kp A   &kp S   &kp D   &kp F   &kp G
-                &kp LSHFT  &kp Z   &kp X   &kp C   &kp V   &kp B
+                &kp LSHIFT  &kp Z   &kp X   &kp C   &kp V   &kp B
                 &kp LCTRL  &kp WIN &kp WIN &kp LALT &kp SPACE &kp SPACE
             >;
         };
