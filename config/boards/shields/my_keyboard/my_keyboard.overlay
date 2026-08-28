@@ -1,6 +1,6 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 
-/* D6(TX)・D7(RX)ピンをUARTシリアル通信から解放 */
+/* D6/D7のUARTペリフェラルを解除 */
 &uart0 {
     status = "disabled";
 };
