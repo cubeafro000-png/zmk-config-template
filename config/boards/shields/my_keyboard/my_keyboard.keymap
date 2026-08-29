@@ -5,7 +5,7 @@
     keymap {
         compatible = "zmk,keymap";
 
-        /* Layer 0 (ベース1 - LED: 全消灯) */
+        /* Layer 0 (デフォルトベース - LED2: 消灯) */
         default_layer {
             bindings = <
                 &kp ESC   &kp N1   &kp N2   &kp N3   &kp N4   &kp N5
@@ -16,7 +16,7 @@
             >;
         };
 
-        /* Layer 1 (ベース2 - LED1点灯) */
+        /* Layer 1 (ベース2 - LED2: 赤点灯) */
         layer_1 {
             bindings = <
                 &kp ESC   &kp N1   &kp N2   &kp N3   &kp N4   &kp N5
@@ -27,7 +27,7 @@
             >;
         };
 
-        /* Layer 2 (ベース3 - LED2点灯) */
+        /* Layer 2 (ベース3 - LED2: 緑点灯) */
         layer_2 {
             bindings = <
                 &kp ESC   &kp N1   &kp N2   &kp N3   &kp N4   &kp N5
@@ -38,7 +38,7 @@
             >;
         };
 
-        /* Layer 3 (FNレイヤー - FN押下時LED: 両方点灯) */
+        /* Layer 3 (FNレイヤー - LED2: 青点灯) */
         fn_layer {
             bindings = <
                 &trans    &to 0    &to 1    &to 2    &trans   &trans
