@@ -12,7 +12,7 @@
                 &kp TAB   &kp D    &kp E    &kp R    &kp Y    &trans
                 &kp CAPS  &kp A    &kp S    &kp G    &kp F    &trans
                 &kp LSHFT &kp Z    &kp X    &kp B    &kp V    &trans
-                &kp LCTRL &kp LWIN &mo 3    &mo 5  &kp LALT &kp mo 4
+                &kp LCTRL &kp LWIN &mo 3    &mo 5  &kp LALT   &mo 4
             >;
         };
 
@@ -52,7 +52,7 @@
         /* Layer 4 (ベース3 - LED2: 緑点灯) */
         layer_4 {
             bindings = <
-                &kp ESC   &kp LALT(H)   &kp H   &kp F   &kp G   &trans
+                &kp ESC   &kp LA(H)   &kp H   &kp F   &kp G   &trans
                 &kp K   &kp Q    &kp W    &kp P    &kp Y    &trans
                 &kp CAPS  &kp DOT    &kp LS(O)    &kp O    &kp F    &trans
                 &kp LSHFT &kp COMMA    &kp LC(LS(TAB))    &kp LS(ESC)   &trans    &trans
