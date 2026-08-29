@@ -44,7 +44,7 @@
         compatible = "worldsemi,ws2812-gpio";
         chain-length = <1>;
         color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
-        in-gpios = <&xiao_d 8 0>;
+        gpios = <&xiao_d 8 0>;
     };
 
     /* SK6812 LED2 (D4) */
@@ -52,6 +52,6 @@
         compatible = "worldsemi,ws2812-gpio";
         chain-length = <1>;
         color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
-        in-gpios = <&xiao_d 4 0>;
+        gpios = <&xiao_d 4 0>;
     };
 };
