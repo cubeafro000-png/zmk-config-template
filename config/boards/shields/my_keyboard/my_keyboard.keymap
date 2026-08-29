@@ -64,7 +64,7 @@
         layer_5 {
             bindings = <
                 &trans    &trans   &trans   &trans   &trans   &trans
-                &trans    &trans   &kp KP_N1 &trans  &trans   &trans
+                &trans    &trans   &kp KP_N7 &trans  &trans   &trans
                 &trans    &kp KP_N1 &kp KP_N9 &kp KP_N3 &trans &trans
                 &kp LSHFT &trans   &trans   &trans   &trans   &trans
                 &kp LCTRL &kp LWIN &mo 3    &trans   &kp LALT &trans
