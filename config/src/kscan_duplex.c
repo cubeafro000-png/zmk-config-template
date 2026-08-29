@@ -31,7 +31,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
         return;
     }
 
-    /* --- Phase 1: 順方向スキャン (Row[1ピンずつ出力] -> Col[入力]) --- */
+    /* --- Phase 1: 順方向スキャン (Row[1本ずつ出力] -> Col[入力]) --- */
     for (int c = 0; c < 3; c++) {
         gpio_pin_configure_dt(&config->col_gpios[c], GPIO_INPUT | GPIO_PULL_DOWN);
     }
@@ -42,7 +42,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
 
         for (int c = 0; c < 3; c++) {
             bool pressed = gpio_pin_get_dt(&config->col_gpios[c]) > 0;
-            int col_idx = c * 2; /* 第0, 2, 4列 */
+            int col_idx = c; /* Col0順=0, Col1順=1, Col2順=2 */
 
             if (pressed != data->matrix_state[r][col_idx]) {
                 data->matrix_state[r][col_idx] = pressed;
@@ -53,7 +53,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
         gpio_pin_configure_dt(&config->row_gpios[r], GPIO_INPUT);
     }
 
-    /* --- Phase 2: 逆方向スキャン (Col[1ピンずつ出力] -> Row[入力]) --- */
+    /* --- Phase 2: 逆方向スキャン (Col[1本ずつ出力] -> Row[入力]) --- */
     for (int r = 0; r < 5; r++) {
         gpio_pin_configure_dt(&config->row_gpios[r], GPIO_INPUT | GPIO_PULL_DOWN);
     }
@@ -64,7 +64,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
 
         for (int r = 0; r < 5; r++) {
             bool pressed = gpio_pin_get_dt(&config->row_gpios[r]) > 0;
-            int col_idx = c * 2 + 1; /* 第1, 3, 5列 */
+            int col_idx = c + 3; /* Col0逆=3, Col1逆=4, Col2逆=5 */
 
             if (pressed != data->matrix_state[r][col_idx]) {
                 data->matrix_state[r][col_idx] = pressed;
@@ -75,7 +75,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
         gpio_pin_configure_dt(&config->col_gpios[c], GPIO_INPUT);
     }
 
-    /* 次回スキャンまで10ms待機 (CPU負荷抑制) */
+    /* 10ms周期でスキャンを実行（CPU負荷およびUSB応答の安定化） */
     k_work_schedule(&data->work, K_MSEC(10));
 }
 
@@ -106,6 +106,13 @@ static int kscan_duplex_init(const struct device *dev) {
 
     data->dev = dev;
     k_work_init_delayable(&data->work, kscan_duplex_work_handler);
+
+    /* 初期状態のクリア */
+    for (int r = 0; r < 5; r++) {
+        for (int c = 0; c < 6; c++) {
+            data->matrix_state[r][c] = false;
+        }
+    }
 
     for (int r = 0; r < 5; r++) {
         if (!device_is_ready(config->row_gpios[r].port)) return -ENODEV;
