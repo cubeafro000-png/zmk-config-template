@@ -5,13 +5,47 @@
     keymap {
         compatible = "zmk,keymap";
 
+        /* Layer 0 (ベース1 - LED: 全消灯) */
         default_layer {
             bindings = <
-                &kp ESC &kp N1 &kp N2 &kp N3 &kp N4 &kp N5
-                &kp TAB &kp Q &kp W &kp E &kp R &kp T
-                &kp CAPS &kp A &kp S &kp D &kp F &kp G
-                &kp LSHFT &kp Z &kp X &kp C &kp V &kp B
-                &kp LCTRL &kp LWIN &kp LWIN &kp LALT &kp SPACE &kp SPACE
+                &kp ESC   &kp N1   &kp N2   &kp N3   &kp N4   &kp N5
+                &kp TAB   &kp Q    &kp W    &kp E    &kp R    &kp T
+                &kp CAPS  &kp A    &kp S    &kp D    &kp F    &kp G
+                &kp LSHFT &kp Z    &kp X    &kp C    &kp V    &kp B
+                &kp LCTRL &kp LWIN &mo 3    &kp LALT &kp SPACE &kp SPACE
+            >;
+        };
+
+        /* Layer 1 (ベース2 - LED1点灯) */
+        layer_1 {
+            bindings = <
+                &kp ESC   &kp N1   &kp N2   &kp N3   &kp N4   &kp N5
+                &kp TAB   &kp Q    &kp W    &kp E    &kp R    &kp T
+                &kp CAPS  &kp A    &kp S    &kp D    &kp F    &kp G
+                &kp LSHFT &kp Z    &kp X    &kp C    &kp V    &kp B
+                &kp LCTRL &kp LWIN &mo 3    &kp LALT &kp SPACE &kp SPACE
+            >;
+        };
+
+        /* Layer 2 (ベース3 - LED2点灯) */
+        layer_2 {
+            bindings = <
+                &kp ESC   &kp N1   &kp N2   &kp N3   &kp N4   &kp N5
+                &kp TAB   &kp Q    &kp W    &kp E    &kp R    &kp T
+                &kp CAPS  &kp A    &kp S    &kp D    &kp F    &kp G
+                &kp LSHFT &kp Z    &kp X    &kp C    &kp V    &kp B
+                &kp LCTRL &kp LWIN &mo 3    &kp LALT &kp SPACE &kp SPACE
+            >;
+        };
+
+        /* Layer 3 (FNレイヤー - FN押下時LED: 両方点灯) */
+        fn_layer {
+            bindings = <
+                &trans    &to 0    &to 1    &to 2    &trans   &trans
+                &trans    &trans   &trans   &trans   &trans   &trans
+                &trans    &trans   &trans   &trans   &trans   &trans
+                &trans    &trans   &trans   &trans   &trans   &trans
+                &trans    &trans   &trans   &trans   &trans   &trans
             >;
         };
     };
