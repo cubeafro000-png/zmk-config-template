@@ -26,7 +26,6 @@ static void update_led_color(uint8_t layer) {
     led_strip_update_rgb(strip2, &color, 1);
 }
 
-/* 起動時の初期点灯 (Zephyrの標準引数型に合わせ ARG_UNUSED で警告を抑止) */
 static int layer_led_init(const struct device *dev) {
     ARG_UNUSED(dev);
     update_led_color(0);
@@ -34,7 +33,6 @@ static int layer_led_init(const struct device *dev) {
 }
 SYS_INIT(layer_led_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
 
-/* レイヤー変更時の点灯制御 */
 static int layer_led_listener(const zmk_event_t *eh) {
     struct zmk_layer_state_changed *ev = as_zmk_layer_state_changed(eh);
     if (ev != NULL) {
@@ -43,15 +41,6 @@ static int layer_led_listener(const zmk_event_t *eh) {
     }
     return ZMK_EV_EVENT_BUBBLE;
 }
-
-ZMK_LISTENER(layer_led, layer_led_listener);
-ZMK_SUBSCRIPTION(layer_led, zmk_layer_state_changed);
-#endif
-}
-
-ZMK_LISTENER(layer_led, layer_led_listener);
-ZMK_SUBSCRIPTION(layer_led, zmk_layer_state_changed);
-#endif
 
 ZMK_LISTENER(layer_led, layer_led_listener);
 ZMK_SUBSCRIPTION(layer_led, zmk_layer_state_changed);
