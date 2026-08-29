@@ -55,7 +55,7 @@
                 &kp ESC   &kp LA(H) &kp H   &kp F    &kp G    &trans
                 &kp K     &kp Q    &kp W    &kp P    &kp Y    &trans
                 &kp CAPS  &kp DOT  &kp LS(O) &kp O   &kp F    &trans
-                &kp LSHFT &kp COMMA &kp LC(LS(TAB)) &kp LS(ESC) &trans &trans
+                &kp LSHFT &kp COMMA &kp LC(LS(TAB)) &kp LS(TAB) &trans &trans
                 &kp LCTRL &kp LWIN &mo 3    &kp LALT &kp SPACE &trans
             >;
         };
