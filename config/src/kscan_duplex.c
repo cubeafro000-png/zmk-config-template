@@ -31,29 +31,11 @@ static void kscan_duplex_work_handler(struct k_work *work) {
         return;
     }
 
-    /* --- Phase 1: 順方向スキャン (Row[1本ずつ出力] -> Col[入力]) --- */
-    for (int c = 0; c < 3; c++) {
-        gpio_pin_configure_dt(&config->col_gpios[c], GPIO_INPUT | GPIO_PULL_DOWN);
-    }
-
-    for (int r = 0; r < 5; r++) {
-        gpio_pin_configure_dt(&config->row_gpios[r], GPIO_OUTPUT_ACTIVE);
-        k_busy_wait(10);
-
-        for (int c = 0; c < 3; c++) {
-            bool pressed = gpio_pin_get_dt(&config->col_gpios[c]) > 0;
-            int col_idx = c; /* Col0順=0, Col1順=1, Col2順=2 */
-
-            if (pressed != data->matrix_state[r][col_idx]) {
-                data->matrix_state[r][col_idx] = pressed;
-                data->callback(dev, r, col_idx, pressed);
-            }
-        }
-
-        gpio_pin_configure_dt(&config->row_gpios[r], GPIO_INPUT);
-    }
-
-    /* --- Phase 2: 逆方向スキャン (Col[1本ずつ出力] -> Row[入力]) --- */
+    /* 
+     * --- Phase 1: 順方向スキャン (Col出力 -> Row入力) ---
+     * 回路: Col -> Diode -> Row (SW1, SW3, SW5...)
+     * col_idx = c (0: Col0順, 1: Col1順, 2: Col2順)
+     */
     for (int r = 0; r < 5; r++) {
         gpio_pin_configure_dt(&config->row_gpios[r], GPIO_INPUT | GPIO_PULL_DOWN);
     }
@@ -64,7 +46,7 @@ static void kscan_duplex_work_handler(struct k_work *work) {
 
         for (int r = 0; r < 5; r++) {
             bool pressed = gpio_pin_get_dt(&config->row_gpios[r]) > 0;
-            int col_idx = c + 3; /* Col0逆=3, Col1逆=4, Col2逆=5 */
+            int col_idx = c; /* 0, 1, 2 */
 
             if (pressed != data->matrix_state[r][col_idx]) {
                 data->matrix_state[r][col_idx] = pressed;
@@ -75,7 +57,33 @@ static void kscan_duplex_work_handler(struct k_work *work) {
         gpio_pin_configure_dt(&config->col_gpios[c], GPIO_INPUT);
     }
 
-    /* 10ms周期でスキャンを実行（CPU負荷およびUSB応答の安定化） */
+    /* 
+     * --- Phase 2: 逆方向スキャン (Row出力 -> Col入力) ---
+     * 回路: Row -> Diode -> Col (SW2, SW4, SW6...)
+     * col_idx = c + 3 (3: Col0逆, 4: Col1逆, 5: Col2逆)
+     */
+    for (int c = 0; c < 3; c++) {
+        gpio_pin_configure_dt(&config->col_gpios[c], GPIO_INPUT | GPIO_PULL_DOWN);
+    }
+
+    for (int r = 0; r < 5; r++) {
+        gpio_pin_configure_dt(&config->row_gpios[r], GPIO_OUTPUT_ACTIVE);
+        k_busy_wait(10);
+
+        for (int c = 0; c < 3; c++) {
+            bool pressed = gpio_pin_get_dt(&config->col_gpios[c]) > 0;
+            int col_idx = c + 3; /* 3, 4, 5 */
+
+            if (pressed != data->matrix_state[r][col_idx]) {
+                data->matrix_state[r][col_idx] = pressed;
+                data->callback(dev, r, col_idx, pressed);
+            }
+        }
+
+        gpio_pin_configure_dt(&config->row_gpios[r], GPIO_INPUT);
+    }
+
+    /* 10ms周期でスキャンを判定 */
     k_work_schedule(&data->work, K_MSEC(10));
 }
 
@@ -107,7 +115,6 @@ static int kscan_duplex_init(const struct device *dev) {
     data->dev = dev;
     k_work_init_delayable(&data->work, kscan_duplex_work_handler);
 
-    /* 初期状態のクリア */
     for (int r = 0; r < 5; r++) {
         for (int c = 0; c < 6; c++) {
             data->matrix_state[r][c] = false;
