@@ -31,17 +31,15 @@ static void kscan_duplex_work_handler(struct k_work *work) {
         return;
     }
 
-    /* --- Phase 1: 順方向スキャン (Row -> Col) --- */
-    for (int r = 0; r < 5; r++) {
-        gpio_pin_configure_dt(&config->row_gpios[r], GPIO_OUTPUT_ACTIVE);
-    }
+    /* --- Phase 1: 順方向スキャン (Row[1ピンずつ出力] -> Col[入力]) --- */
     for (int c = 0; c < 3; c++) {
         gpio_pin_configure_dt(&config->col_gpios[c], GPIO_INPUT | GPIO_PULL_DOWN);
     }
 
-    k_busy_wait(10); /* 信号安定待ち（わずか10微小秒に抑制） */
-
     for (int r = 0; r < 5; r++) {
+        gpio_pin_configure_dt(&config->row_gpios[r], GPIO_OUTPUT_ACTIVE);
+        k_busy_wait(10);
+
         for (int c = 0; c < 3; c++) {
             bool pressed = gpio_pin_get_dt(&config->col_gpios[c]) > 0;
             int col_idx = c * 2; /* 第0, 2, 4列 */
@@ -51,19 +49,19 @@ static void kscan_duplex_work_handler(struct k_work *work) {
                 data->callback(dev, r, col_idx, pressed);
             }
         }
+
+        gpio_pin_configure_dt(&config->row_gpios[r], GPIO_INPUT);
     }
 
-    /* --- Phase 2: 逆方向スキャン (Col -> Row) --- */
-    for (int c = 0; c < 3; c++) {
-        gpio_pin_configure_dt(&config->col_gpios[c], GPIO_OUTPUT_ACTIVE);
-    }
+    /* --- Phase 2: 逆方向スキャン (Col[1ピンずつ出力] -> Row[入力]) --- */
     for (int r = 0; r < 5; r++) {
         gpio_pin_configure_dt(&config->row_gpios[r], GPIO_INPUT | GPIO_PULL_DOWN);
     }
 
-    k_busy_wait(10); /* 信号安定待ち（10微小秒） */
-
     for (int c = 0; c < 3; c++) {
+        gpio_pin_configure_dt(&config->col_gpios[c], GPIO_OUTPUT_ACTIVE);
+        k_busy_wait(10);
+
         for (int r = 0; r < 5; r++) {
             bool pressed = gpio_pin_get_dt(&config->row_gpios[r]) > 0;
             int col_idx = c * 2 + 1; /* 第1, 3, 5列 */
@@ -73,17 +71,11 @@ static void kscan_duplex_work_handler(struct k_work *work) {
                 data->callback(dev, r, col_idx, pressed);
             }
         }
-    }
 
-    /* ピンの初期化（ハイ・インピーダンス解除） */
-    for (int r = 0; r < 5; r++) {
-        gpio_pin_configure_dt(&config->row_gpios[r], GPIO_INPUT);
-    }
-    for (int c = 0; c < 3; c++) {
         gpio_pin_configure_dt(&config->col_gpios[c], GPIO_INPUT);
     }
 
-    /* CPUとUSBスレッドへ処理を譲るため、10ms周期で次回走査をスケジュール */
+    /* 次回スキャンまで10ms待機 (CPU負荷抑制) */
     k_work_schedule(&data->work, K_MSEC(10));
 }
 
