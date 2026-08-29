@@ -8,22 +8,22 @@
         /* Layer 0 (デフォルトベース - LED2: 消灯) */
         default_layer {
             bindings = <
-                &kp T   &kp M   &kp J   &kp I   &kp N   &trans
+                &kp T     &kp M    &kp J    &kp I    &kp N    &trans
                 &kp TAB   &kp D    &kp E    &kp R    &kp Y    &trans
                 &kp CAPS  &kp A    &kp S    &kp G    &kp F    &trans
                 &kp LSHFT &kp Z    &kp X    &kp B    &kp V    &trans
-                &kp LCTRL &kp LWIN &mo 3    &mo 5  &kp LALT   &mo 4
+                &kp LCTRL &kp LWIN &mo 3    &mo 5    &kp LALT &mo 4
             >;
         };
 
         /* Layer 1 (ベース2 - LED2: 赤点灯) */
         layer_1 {
             bindings = <
-                &kp ESC   &kp TAB   &kp G   &kp U   &kp E   &trans
-                &kp ENTER   &kp Q    &kp W    &kp P    &kp K    &trans
+                &kp ESC   &kp TAB  &kp G    &kp U    &kp E    &trans
+                &kp ENTER &kp Q    &kp W    &kp P    &kp K    &trans
                 &kp CAPS  &kp A    &kp S    &kp S    &kp P    &trans
                 &kp LSHFT &kp Z    &kp V    &kp C    &kp X    &trans
-                &kp LCTRL &kp LWIN &mo 3    &kp SPACE  &kp SPACE  &kp LALT
+                &kp LCTRL &kp LWIN &mo 3    &kp SPACE &kp SPACE &kp LALT
             >;
         };
 
@@ -49,24 +49,25 @@
             >;
         };
 
-        /* Layer 4 (ベース3 - LED2: 緑点灯) */
+        /* Layer 4 (LED2: 黄点灯) */
         layer_4 {
             bindings = <
-                &kp ESC   &kp LA(H)   &kp H   &kp F   &kp G   &trans
-                &kp K   &kp Q    &kp W    &kp P    &kp Y    &trans
-                &kp CAPS  &kp DOT    &kp LS(O)    &kp O    &kp F    &trans
-                &kp LSHFT &kp COMMA    &kp LC(LS(TAB))    &kp LS(ESC)   &trans    &trans
+                &kp ESC   &kp LA(H) &kp H   &kp F    &kp G    &trans
+                &kp K     &kp Q    &kp W    &kp P    &kp Y    &trans
+                &kp CAPS  &kp DOT  &kp LS(O) &kp O   &kp F    &trans
+                &kp LSHFT &kp COMMA &kp LC(LS(TAB)) &kp LS(ESC) &trans &trans
                 &kp LCTRL &kp LWIN &mo 3    &kp LALT &kp SPACE &trans
             >;
         };
-        /* Layer 5 (ベース3 - LED2: 緑点灯) */
+
+        /* Layer 5 (LED2: 紫点灯) */
         layer_5 {
             bindings = <
-                &trans  &trans   &trans  &trans   &trans  &trans
-                &trans  &trans   &kp KP_N1   &trans   &trans  &trans
-                &trans  &kp KP_N1    &kp KP_N9  &kp KP_N3  &trans    &trans
-                &kp LSHFT &trans    &trans    &trans   &trans    &trans
-                &kp LCTRL &kp LWIN &mo 3    &trans &kp LALT &trans
+                &trans    &trans   &trans   &trans   &trans   &trans
+                &trans    &trans   &kp KP_N1 &trans  &trans   &trans
+                &trans    &kp KP_N1 &kp KP_N9 &kp KP_N3 &trans &trans
+                &kp LSHFT &trans   &trans   &trans   &trans   &trans
+                &kp LCTRL &kp LWIN &mo 3    &trans   &kp LALT &trans
             >;
         };
     };
