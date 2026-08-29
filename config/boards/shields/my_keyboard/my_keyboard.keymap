@@ -34,7 +34,7 @@
                 &kp TAB   &kp Q    &kp W    &kp E    &kp R    &kp T
                 &kp CAPS  &kp A    &kp S    &kp D    &kp F    &kp G
                 &kp LSHFT &kp Z    &kp X    &kp C    &kp V    &kp B
-                &kp LCTRL &kp LWIN &mo 3    &kp LALT &kp SPACE &kp A
+                &kp LCTRL &kp LWIN &mo 3    &kp LALT &kp SPACE &kp SPACE
             >;
         };
 
