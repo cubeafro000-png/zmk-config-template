@@ -19,11 +19,11 @@
         /* Layer 1 (ベース2 - LED2: 赤点灯) */
         layer_1 {
             bindings = <
-                &kp ESC   &kp TAB  &kp G    &kp U    &kp E    &trans
-                &kp ENTER &kp Q    &kp W    &kp P    &kp K    &trans
-                &kp CAPS  &kp A    &kp S    &kp S    &kp P    &trans
+                &kp ESC   &kp TAB  &kp G    &kp B    &kp G    &trans
+                &kp ENTER &kp Q    &kp W    &kp U    &kp E    &trans
+                &kp CAPS  &kp A    &kp S    &kp P    &kp K    &trans
                 &kp LSHFT &kp Z    &kp V    &kp C    &kp X    &trans
-                &kp LCTRL &kp LWIN &mo 3    &kp SPACE &kp SPACE &kp LALT
+                &kp LCTRL &kp LWIN &mo 3    &kp A    &kp SPACE &kp LALT
             >;
         };
 
