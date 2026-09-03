@@ -42,7 +42,7 @@
         fn_layer {
             bindings = <
                 &bt BT_CLR_ALL    &to 0    &to 1    &to 2    &trans   &trans
-                &trans    &trans   &trans   &trans   &trans   &trans
+                &bt BT_CLR    &out OUT_TOG   &out OUT_USB   &out OUT_BLE   &trans   &trans
                 &trans    &trans   &trans   &trans   &trans   &trans
                 &trans    &trans   &trans   &trans   &trans   &trans
                 &trans    &trans   &trans   &trans   &trans   &trans
