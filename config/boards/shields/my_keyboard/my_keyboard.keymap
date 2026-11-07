@@ -25,7 +25,7 @@
                 &kp ENTER &kp D    &kp W    &kp U    &kp E    &trans
                 &kp CAPS  &kp A    &kp S    &kp P    &kp K    &trans
                 &kp LSHFT &kp Z    &kp V    &kp C    &kp X    &trans
-                &kp LCTRL &kp LWIN &mo 3    &kp A    &kp SPACE &kp LALT
+                &kp LCTRL &kp LWIN &mo 3    &kp LC(LS(P))    &kp SPACE &kp LALT
             >;
         };
 
